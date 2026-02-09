@@ -3,7 +3,7 @@
 $PythonExe = "C:\Users\Local Admin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Python\Python 3.14\Python 3.14.lnk"
 $RobocopyScript = "C:\2026 Utilities Management\Functions\copy_aquisuite_logs.ps1"
 $PythonScript   = "C:\2026 Utilities Management\Functions\load_acquisuite_any_csv.py"
-$LogDir = "C:\2026 Utilities Management\Robocopy_logs"
+$LogDir = "C:\2026 Utilities Management\logs\Pipeline_logs"
 
 # create log directory if it doesn't exist, and set up log file path
 if (!(Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir | Out-Null }

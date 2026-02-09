@@ -1,11 +1,28 @@
+# this script loads log.csv files found in the local PC folder that stores files
+# copied from the file server. It then parses the timestamp, source, metric, value, and unit from each column
+# finally, it uploads the data to a postgres database
+
+
+# import libraries needed for parsing and database connection
+# re for regex parsing--> use regular expressions to find or validate patterns in text
+# define pattern and apply the pattern to find matches, extract matched parts
 import re
+
+# pathlib for file handling--> working with file paths and directories
+# work with filesystem paths in an object oriented way by creating Path objects
 from pathlib import Path
+
+#pandas for csv parsing--> understand csv files and store in dataframe for manipulation
 import pandas as pd
+
+#psycopg2 for postgres connection
 import psycopg2
 from psycopg2.extras import execute_values
 
+# define folder where csv files are located to be parsed
 ROOT_FOLDER = r"C:\Deep_Springs_Aquisuite_Database"
 
+#define postgres connection parameters
 PG = {
     "host": "localhost",
     "port": 5432,
@@ -13,9 +30,11 @@ PG = {
     "user": "postgres",
     "password": "DSC2026"
 }
-
+# define table in postgres to insert log info into
 TABLE = "measurements"
 
+# define patterns to be used be regex identify metric types in column names 
+# match metric pattern in column name to standard name in database
 METRIC_PATTERNS = [
     (r"\bave\s*rate\b$", "avg_rate"),
     (r"\bavg\s*rate\b$", "avg_rate"),
@@ -34,8 +53,10 @@ METRIC_PATTERNS = [
     (r"\bstatus\b$", "status"),
 ]
 
+# regex to extract unit from column name, looking for last (...) group at end of string
 UNIT_RE = re.compile(r"\(([^()]*)\)\s*$")  # last (...) group at end
 
+#  function to infer quantity type (pressure, flow, power, energy, pulse) from column name and unit
 def infer_quantity(source: str, unit: str | None) -> str | None:
     s = source.lower()
     u = (unit or "").lower()
@@ -64,6 +85,7 @@ def infer_quantity(source: str, unit: str | None) -> str | None:
 
     return None
 
+# function to parse column name into source, metric, and unit
 def parse_column(col: str):
     if col is None:
         return None
@@ -204,7 +226,7 @@ def load_one_csv(path):
                 bool(r["high_alarm"])
             ))
 
-    # <-- IMPORTANT: return 0 must be inside the function at this indentation level
+    
     if not rows:
         return 0
     
