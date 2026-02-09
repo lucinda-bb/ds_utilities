@@ -1,0 +1,9 @@
+Copying Aquisuite Files to Database
+
+## in terminal, telling it to go to file server and return logs from January 2026 folder and copy them to the folder on my PC called aquisuite database
+
+PS C:\Users\Local Admin> Copy-Item "Z:\Deep_Springs_College_Acquisuite_001EC60524FE\Deep_Springs_College_Acquisuite_001EC60524FE_Archive\2026-01\*.log.csv" -Destination "C:\Deep_Springs_Aquisuite_Database\" -Verbose
+
+## next, i need to figure out how to have terminal copy new files from folder, regardless of month, and make sure new logs are going to the right place
+## I will then make a python script to automatically do this
+
